@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Физический квест — 7 класс</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(99,102,241,.35), transparent 30%),
+        radial-gradient(circle at 90% 20%, rgba(14,165,233,.28), transparent 30%),
+        linear-gradient(135deg, #07132f, #101d45 50%, #071b35);
+    color: #fff;
+    min-height: 100vh;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ================= START ================= */
+
+.start-screen {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 25px;
+}
+
+.start-card {
+    width: min(100%, 1000px);
+    padding: 40px;
+    border-radius: 30px;
+    background: rgba(15, 23, 60, .88);
+    border: 1px solid rgba(255,255,255,.16);
+    box-shadow: 0 30px 80px rgba(0,0,0,.45);
+    text-align: center;
+    backdrop-filter: blur(15px);
+}
+
+.school-name {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #93c5fd;
+    margin-bottom: 15px;
+}
+
+.start-card h1 {
+    font-size: clamp(34px, 6vw, 68px);
+    margin: 10px 0;
+    background: linear-gradient(90deg,#67e8f9,#a78bfa,#f0abfc);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.start-card h2 {
+    font-size: clamp(20px, 3vw, 30px);
+    margin: 10px 0 30px;
+}
+
+.start-description {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #dbeafe;
+    max-width: 760px;
+    margin: auto;
+}
+
+.lab-svg {
+    width: min(100%, 600px);
+    height: 240px;
+    margin: 20px auto;
+}
+
+.name-box {
+    max-width: 600px;
+    margin: 30px auto 10px;
+}
+
+.name-box label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.name-box input {
+    width: 100%;
+    padding: 17px 20px;
+    border-radius: 15px;
+    border: 2px solid rgba(255,255,255,.2);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    font-size: 19px;
+    outline: none;
+    text-align: center;
+}
+
+.name-box input:focus {
+    border-color: #67e8f9;
+    box-shadow: 0 0 20px rgba(103,232,249,.2);
+}
+
+.start-btn,
+.restart-btn,
+.print-btn {
+    border: 0;
+    cursor: pointer;
+    color: #fff;
+    font-weight: 900;
+    border-radius: 16px;
+    padding: 17px 35px;
+    font-size: 18px;
+    margin-top: 20px;
+    transition: .2s;
+}
+
+.start-btn {
+    background: linear-gradient(135deg,#06b6d4,#6366f1);
+    box-shadow: 0 12px 30px rgba(59,130,246,.35);
+}
+
+.start-btn:hover,
+.restart-btn:hover,
+.print-btn:hover {
+    transform: translateY(-3px);
+}
+
+.start-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.teacher {
+    margin-top: 25px;
+    color: #bfdbfe;
+}
+
+/* ================= GAME ================= */
+
+.game {
+    min-height: 100vh;
+    padding: 18px;
+}
+
+.game-container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.top-header {
+    background: rgba(15,23,60,.9);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 15px 45px rgba(0,0,0,.25);
+}
+
+.header-title {
+    font-size: 26px;
+    font-weight: 900;
+    text-align: center;
+}
+
+.header-subtitle {
+    text-align: center;
+    color: #bfdbfe;
+    margin-top: 5px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.stat {
+    background: rgba(255,255,255,.07);
+    padding: 12px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 22px;
+    font-weight: 900;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #bfdbfe;
+}
+
+.progress-wrap {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 14px;
+    background: rgba(255,255,255,.1);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg,#22d3ee,#818cf8,#e879f9);
+    transition: width .4s;
+}
+
+.stage {
+    margin: 20px 0 10px;
+    text-align: center;
+}
+
+.stage-number {
+    color: #67e8f9;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.stage-title {
+    font-size: clamp(23px,4vw,36px);
+    margin: 5px 0;
+    font-weight: 900;
+}
+
+.question-card {
+    background: rgba(15,23,60,.92);
+    border-radius: 25px;
+    padding: 28px;
+    border: 1px solid rgba(255,255,255,.13);
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+}
+
+.difficulty {
+    display: inline-block;
+    padding: 7px 13px;
+    border-radius: 20px;
+    background: rgba(99,102,241,.2);
+    color: #c4b5fd;
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.question-number {
+    color: #93c5fd;
+    font-weight: 700;
+}
+
+.question-text {
+    font-size: clamp(20px,3vw,28px);
+    line-height: 1.45;
+    margin: 15px 0 20px;
+}
+
+.visual {
+    background: rgba(255,255,255,.96);
+    border-radius: 20px;
+    padding: 10px;
+    min-height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+    overflow: hidden;
+}
+
+.visual svg {
+    max-width: 100%;
+    width: 650px;
+    height: 240px;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 14px;
+}
+
+.option {
+    border: 2px solid rgba(255,255,255,.13);
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    padding: 17px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 17px;
+    font-weight: 700;
+    text-align: left;
+    transition: .2s;
+}
+
+.option:hover {
+    border-color: #67e8f9;
+    transform: translateY(-2px);
+    background: rgba(103,232,249,.1);
+}
+
+.option.selected {
+    border-color: #22d3ee;
+    background: rgba(34,211,238,.16);
+}
+
+.option.correct {
+    border-color: #4ade80;
+    background: rgba(74,222,128,.15);
+}
+
+.option.wrong {
+    border-color: #fb7185;
+    background: rgba(251,113,133,.15);
+}
+
+.numeric-box {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    max-width: 600px;
+    margin: auto;
+}
+
+.numeric-box input {
+    flex: 1;
+    padding: 17px;
+    border-radius: 14px;
+    border: 2px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.08);
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+}
+
+.unit {
+    font-size: 22px;
+    font-weight: 900;
+    color: #67e8f9;
+}
+
+.multi-note {
+    color: #bfdbfe;
+    margin-bottom: 12px;
+}
+
+.submit-area {
+    text-align: center;
+    margin-top: 22px;
+}
+
+.submit-btn {
+    border: 0;
+    border-radius: 15px;
+    padding: 16px 35px;
+    font-size: 18px;
+    font-weight: 900;
+    color: #fff;
+    background: linear-gradient(135deg,#2563eb,#7c3aed);
+    cursor: pointer;
+}
+
+.submit-btn:disabled {
+    opacity: .4;
+    cursor: not-allowed;
+}
+
+.feedback {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 16px;
+    line-height: 1.55;
+    display: none;
+}
+
+.feedback.show {
+    display: block;
+}
+
+.feedback.good {
+    background: rgba(34,197,94,.14);
+    border: 1px solid rgba(74,222,128,.35);
+}
+
+.feedback.bad {
+    background: rgba(239,68,68,.14);
+    border: 1px solid rgba(248,113,113,.35);
+}
+
+.next-btn {
+    margin-top: 15px;
+    border: 0;
+    border-radius: 13px;
+    padding: 13px 25px;
+    background: #0891b2;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* ================= FINAL ================= */
+
+.final-screen {
+    min-height: 100vh;
+    padding: 30px 15px;
+}
+
+.final-card {
+    max-width: 1000px;
+    margin: auto;
+    background: rgba(15,23,60,.94);
+    border-radius: 30px;
+    padding: 35px;
+    box-shadow: 0 25px 80px rgba(0,0,0,.4);
+    text-align: center;
+}
+
+.final-card h1 {
+    font-size: clamp(32px,5vw,55px);
+    margin: 10px;
+}
+
+.result-name {
+    color: #67e8f9;
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 12px;
+    margin: 30px 0;
+}
+
+.result-box {
+    padding: 20px 10px;
+    background: rgba(255,255,255,.07);
+    border-radius: 16px;
+}
+
+.result-number {
+    font-size: 30px;
+    font-weight: 900;
+}
+
+.result-label {
+    color: #bfdbfe;
+    font-size: 13px;
+}
+
+.grade {
+    font-size: 70px;
+    font-weight: 900;
+    margin: 15px;
+    background: linear-gradient(90deg,#fde68a,#f59e0b,#f97316);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.grade-text {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.certificate {
+    margin: 35px auto;
+    max-width: 900px;
+    padding: 45px;
+    color: #172554;
+    background:
+        linear-gradient(135deg,#eff6ff,#ffffff,#eef2ff);
+    border: 8px double #4f46e5;
+    position: relative;
+}
+
+.certificate::before,
+.certificate::after {
+    content: "★";
+    position: absolute;
+    font-size: 55px;
+    color: #4f46e5;
+    opacity: .18;
+}
+
+.certificate::before {
+    top: 20px;
+    left: 25px;
+}
+
+.certificate::after {
+    bottom: 20px;
+    right: 25px;
+}
+
+.cert-school {
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.cert-title {
+    font-size: 45px;
+    font-weight: 900;
+    margin: 15px;
+    color: #3730a3;
+}
+
+.cert-subtitle {
+    font-size: 18px;
+}
+
+.cert-name {
+    font-size: 32px;
+    font-weight: 900;
+    margin: 25px 0;
+    color: #111827;
+}
+
+.cert-topic {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.cert-grade {
+    font-size: 34px;
+    font-weight: 900;
+    margin: 25px;
+    color: #4338ca;
+}
+
+.cert-info {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    margin: 25px 0;
+}
+
+.cert-info div {
+    padding: 12px;
+    border: 1px solid #c7d2fe;
+    border-radius: 10px;
+}
+
+.cert-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 35px;
+    font-weight: 800;
+}
+
+.print-btn {
+    background: linear-gradient(135deg,#059669,#2563eb);
+}
+
+.restart-btn {
+    background: linear-gradient(135deg,#7c3aed,#db2777);
+}
+
+/* ================= SVG ================= */
+
+.svg-text {
+    font-family: Arial, sans-serif;
+    font-weight: 800;
+    fill: #111827;
+}
+
+.tick {
+    stroke: #111827;
+    stroke-width: 2;
+}
+
+.axis {
+    stroke: #111827;
+    stroke-width: 4;
+}
+
+.pointer {
+    stroke: #dc2626;
+    stroke-width: 5;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width: 800px) {
+    .stats,
+    .result-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+    .start-card,
+    .question-card,
+    .final-card {
+        padding: 20px;
+    }
+
+    .certificate {
+        padding: 25px;
+    }
+
+    .cert-info {
+        grid-template-columns: 1fr;
+    }
+
+    .cert-footer {
+        flex-direction: column;
+        gap: 20px;
+    }
+}
+
+@media(max-width: 500px) {
+    .stats {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .numeric-box {
+        flex-direction: column;
+    }
+
+    .numeric-box input {
+        width: 100%;
+    }
+
+    .certificate {
+        border-width: 4px;
+    }
+
+    .cert-title {
+        font-size: 32px;
+    }
+
+    .cert-name {
+        font-size: 24px;
+    }
+}
+
+/* ================= PRINT ================= */
+
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    body * {
+        visibility: hidden;
+    }
+
+    #certificate,
+    #certificate * {
+        visibility: visible;
+    }
+
+    #certificate {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        box-shadow: none;
+    }
+
+    .print-btn,
+    .restart-btn {
+        display: none !important;
+    }
+
+    @page {
+        size: A4 landscape;
+        margin: 10mm;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= START SCREEN ================= -->
+
+<section id="startScreen" class="start-screen">
+    <div class="start-card">
+
+        <div class="school-name">
+            ОБЩЕОБРАЗОВАТЕЛЬНАЯ ШКОЛА №6
+        </div>
+
+        <h1>ФИЗИЧЕСКИЙ КВЕСТ</h1>
+
+        <h2>Лаборатория 7 класса</h2>
+
+        <div class="start-description">
+            <b>Физические явления • Измерение физических величин • Цена деления</b>
+            <br><br>
+            Тебя ждут 33 задания различной сложности.
+            Анализируй условия, считывай показания приборов,
+            выполняй расчёты и принимай решения самостоятельно.
+            <br><br>
+            <b>Внимание:</b> в заданиях нет подсказок с правильным ответом.
+        </div>
+
+        <svg class="lab-svg" viewBox="0 0 700 240">
+            <rect x="70" y="175" width="560" height="18" rx="9" fill="#334155"/>
+            <rect x="100" y="193" width="25" height="40" fill="#475569"/>
+            <rect x="575" y="193" width="25" height="40" fill="#475569"/>
+
+            <!-- flask -->
+            <path d="M250 80 L250 125 L220 175 L300 175 L270 125 L270 80Z"
+                  fill="#bae6fd" stroke="#0369a1" stroke-width="4"/>
+            <path d="M230 155 Q260 140 290 155 L300 175 L220 175Z"
+                  fill="#38bdf8"/>
+
+            <!-- ruler -->
+            <rect x="365" y="145" width="180" height="25" rx="4"
+                  fill="#fde68a" stroke="#92400e" stroke-width="3"/>
+            <line x1="380" y1="145" x2="380" y2="160" stroke="#92400e"/>
+            <line x1="400" y1="145" x2="400" y2="165" stroke="#92400e"/>
+            <line x1="420" y1="145" x2="420" y2="160" stroke="#92400e"/>
+            <line x1="440" y1="145" x2="440" y2="165" stroke="#92400e"/>
+            <line x1="460" y1="145" x2="460" y2="160" stroke="#92400e"/>
+            <line x1="480" y1="145" x2="480" y2="165" stroke="#92400e"/>
+            <line x1="500" y1="145" x2="500" y2="160" stroke="#92400e"/>
+            <line x1="520" y1="145" x2="520" y2="165" stroke="#92400e"/>
+
+            <!-- student -->
+            <circle cx="150" cy="75" r="30" fill="#fbbf24"/>
+            <path d="M120 120 Q150 95 180 120 L195 175 L105 175Z"
+                  fill="#6366f1"/>
+            <circle cx="138" cy="72" r="4" fill="#111827"/>
+            <circle cx="162" cy="72" r="4" fill="#111827"/>
+            <path d="M140 87 Q150 94 160 87" fill="none" stroke="#111827" stroke-width="3"/>
+
+            <!-- thermometer -->
+            <rect x="550" y="65" width="18" height="100" rx="9"
+                  fill="#e2e8f0" stroke="#475569" stroke-width="3"/>
+            <circle cx="559" cy="170" r="18" fill="#ef4444"/>
+            <rect x="554" y="90" width="10" height="75" fill="#ef4444"/>
+
+            <!-- lamp -->
+            <path d="M450 70 L490 70 L505 105 L435 105Z"
+                  fill="#fde68a" stroke="#92400e" stroke-width="3"/>
+            <line x1="470" y1="105" x2="470" y2="140" stroke="#111827" stroke-width="4"/>
+            <circle cx="470" cy="58" r="12" fill="#fef08a"/>
+        </svg>
+
+        <div class="name-box">
+            <label for="studentName">Введите фамилию и имя</label>
+            <input
+                id="studentName"
+                type="text"
+                autocomplete="off"
+                placeholder="Например: Иванов Иван"
+                maxlength="80"
+            >
+        </div>
+
+        <button id="startBtn" class="start-btn" disabled>
+            🚀 НАЧАТЬ ИГРУ
+        </button>
+
+        <div class="teacher">
+            Учитель: <b>Александр Сергеевич</b><br>
+            2026–2027 учебный год
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= GAME ================= -->
+
+<section id="gameScreen" class="game hidden">
+    <div class="game-container">
+
+        <header class="top-header">
+            <div class="header-title">🔬 ФИЗИЧЕСКИЙ КВЕСТ</div>
+            <div class="header-subtitle">
+                Лаборатория 7 класса
+            </div>
+
+            <div class="stats">
+
+                <div class="stat">
+                    <span id="scoreValue" class="stat-value">0</span>
+                    <span class="stat-label">⭐ Баллы</span>
+                </div>
+
+                <div class="stat">
+                    <span id="livesValue" class="stat-value">❤️❤️❤️</span>
+                    <span class="stat-label">Жизни</span>
+                </div>
+
+                <div class="stat">
+                    <span id="levelValue" class="stat-value">Начинающий</span>
+                    <span class="stat-label">🏆 Уровень</span>
+                </div>
+
+                <div class="stat">
+                    <span id="progressValue" class="stat-value">0%</span>
+                    <span class="stat-label">📊 Прогресс</span>
+                </div>
+
+            </div>
+
+            <div class="progress-wrap">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="stage">
+            <div id="stageNumber" class="stage-number"></div>
+            <div id="stageTitle" class="stage-title"></div>
+        </div>
+
+        <main class="question-card">
+
+            <div id="difficulty" class="difficulty"></div>
+
+            <div id="questionNumber" class="question-number"></div>
+
+            <div id="questionText" class="question-text"></div>
+
+            <div id="visual" class="visual"></div>
+
+            <div id="answerArea"></div>
+
+            <div class="submit-area">
+                <button id="submitBtn" class="submit-btn">
+                    ПРОВЕРИТЬ ОТВЕТ
+                </button>
+            </div>
+
+            <div id="feedback" class="feedback"></div>
+
+        </main>
+
+    </div>
+</section>
+
+<!-- ================= FINAL ================= -->
+
+<section id="finalScreen" class="final-screen hidden">
+
+    <div class="final-card">
+
+        <div>🏆</div>
+
+        <h1>ИГРА ЗАВЕРШЕНА!</h1>
+
+        <div id="finalName" class="result-name"></div>
+
+        <div class="result-grid">
+
+            <div class="result-box">
+                <div id="finalScore" class="result-number">0</div>
+                <div class="result-label">Баллы</div>
+            </div>
+
+            <div class="result-box">
+                <div id="finalCorrect" class="result-number">0</div>
+                <div class="result-label">Правильных</div>
+            </div>
+
+            <div class="result-box">
+                <div id="finalErrors" class="result-number">0</div>
+                <div class="result-label">Ошибок</div>
+            </div>
+
+            <div class="result-box">
+                <div id="finalPercent" class="result-number">0%</div>
+                <div class="result-label">Результат</div>
+            </div>
+
+        </div>
+
+        <div id="finalGrade" class="grade">5</div>
+        <div id="finalGradeText" class="grade-text">Отлично</div>
+
+        <div id="certificate" class="certificate">
+
+            <div class="cert-school">
+                ОБЩЕОБРАЗОВАТЕЛЬНАЯ ШКОЛА №6
+            </div>
+
+            <div class="cert-title">
+                СЕРТИФИКАТ
+            </div>
+
+            <div class="cert-subtitle">
+                участника физического квеста
+            </div>
+
+            <div id="certName" class="cert-name">
+                —
+            </div>
+
+            <div class="cert-topic">
+                успешно выполнил(а) задания по теме:
+                <br>
+                <b>
+                    «Физические явления. Измерение физических величин.
+                    Определение цены деления измерительных приборов»
+                </b>
+            </div>
+
+            <div id="certGrade" class="cert-grade">
+                Оценка: 5 — Отлично
+            </div>
+
+            <div class="cert-info">
+
+                <div>
+                    <b>Результат</b><br>
+                    <span id="certPercent">0%</span>
+                </div>
+
+                <div>
+                    <b>Баллы</b><br>
+                    <span id="certPoints">0</span>
+                </div>
+
+                <div>
+                    <b>Уровень</b><br>
+                    <span id="certLevel">—</span>
+                </div>
+
+            </div>
+
+            <div class="cert-footer">
+
+                <div>
+                    Учитель:<br>
+                    Александр Сергеевич
+                </div>
+
+                <div>
+                    2026–2027<br>
+                    учебный год
+                </div>
+
+            </div>
+
+        </div>
+
+        <button class="print-btn" onclick="window.print()">
+            🖨️ ПЕЧАТЬ СЕРТИФИКАТА
+        </button>
+
+        <br>
+
+        <button id="restartBtn" class="restart-btn">
+            🔄 ПРОЙТИ ЕЩЁ РАЗ
+        </button>
+
+    </div>
+</section>
+
+
+<script>
+"use strict";
+
+/* =========================================================
+   ФИЗИЧЕСКИЙ КВЕСТ
+   Всё находится внутри одного HTML-файла.
+========================================================= */
+
+const $ = (id) => document.getElementById(id);
+
+const startScreen = $("startScreen");
+const gameScreen = $("gameScreen");
+const finalScreen = $("finalScreen");
+
+const studentNameInput = $("studentName");
+const startBtn = $("startBtn");
+const submitBtn = $("submitBtn");
+const restartBtn = $("restartBtn");
+
+let studentName = "";
+let currentQuestion = 0;
+let score = 0;
+let correctCount = 0;
+let errorCount = 0;
+let lives = 3;
+let answered = false;
+let selectedAnswers = [];
+
+
+/* =========================================================
+   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+========================================================= */
+
+function shuffle(array) {
+    const arr = [...array];
+
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+
+    return arr;
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function getDifficultyText(level) {
+    if (level === "easy") return "🟢 БАЗОВЫЙ УРОВЕНЬ";
+    if (level === "medium") return "🟡 ПОВЫШЕННЫЙ УРОВЕНЬ";
+    return "🔴 СЛОЖНЫЙ УРОВЕНЬ";
+}
+
+function getLevel(percent) {
+    if (percent >= 90) return "Мастер физики";
+    if (percent >= 70) return "Лаборант";
+    if (percent >= 50) return "Юный исследователь";
+    return "Начинающий исследователь";
+}
+
+function getGrade(percent) {
+    if (percent >= 90) {
+        return {
+            grade: 5,
+            text: "Отлично"
+        };
+    }
+
+    if (percent >= 70) {
+        return {
+            grade: 4,
+            text: "Хорошо"
+        };
+    }
+
+    if (percent >= 50) {
+        return {
+            grade: 3,
+            text: "Удовлетворительно"
+        };
+    }
+
+    return {
+        grade: 2,
+        text: "Нужно повторить материал"
+    };
+}
+
+
+/* =========================================================
+   SVG — ФИЗИЧЕСКИЕ ЯВЛЕНИЯ
+========================================================= */
+
+function svgIce() {
+    return `
+    <svg viewBox="0 0 600 240">
+        <rect x="0" y="0" width="600" height="240" fill="#e0f2fe"/>
+        <path d="M170 80 L300 55 L410 90 L385 150 L230 170 L160 130Z"
+              fill="#93c5fd" stroke="#1d4ed8" stroke-width="5"/>
+        <path d="M220 165 Q300 135 390 150 L370 205 L210 205Z"
+              fill="#60a5fa" opacity=".75"/>
+        <path d="M190 185 Q300 170 410 190" fill="none"
+              stroke="#0284c7" stroke-width="5"/>
+        <text x="300" y="225" text-anchor="middle"
+              class="svg-text" font-size="18">
+              Наблюдение 1
+        </text>
+    </svg>`;
+}
+
+function svgBoiling() {
+    return `
+    <svg viewBox="0 0 600 240">
+        <rect x="0" y="0" width="600" height="240" fill="#fff7ed"/>
+        <path d="M210 90 L390 90 L365 195 L235 195Z"
+              fill="#bae6fd" stroke="#0f172a" stroke-width="5"/>
+        <path d="M235 155 Q300 135 365 155 L365 195 L235 195Z"
+              fill="#38bdf8"/>
+        <path d="M270 115 Q250 90 275 70 Q295 50 280 30"
+              fill="none" stroke="#94a3b8" stroke-width="6"/>
+        <path d="M325 115 Q305 90 330 70 Q350 50 335 30"
+              fill="none" stroke="#94a3b8" stroke-width="6"/>
+        <path d="M215 200 L385 200" stroke="#111827" stroke-width="10"/>
+        <text x="300" y="225" text-anchor="middle"
+              class="svg-text" font-size="18">Наблюдение 2</text>
+    </svg>`;
+}
+
+function svgBall() {
+    return `
+    <svg viewBox="0 0 600 240">
+        <rect width="600" height="240" fill="#ecfdf5"/>
+        <circle cx="300" cy="55" r="25" fill="#ef4444"/>
+        <path d="M300 85 L300 175" stroke="#2563eb" stroke-width="6"/>
+        <path d="M285 160 L300 180 L315 160" fill="none"
+              stroke="#2563eb" stroke-width="6"/>
+        <line x1="180" y1="195" x2="420" y2="195"
+              stroke="#111827" stroke-width="8"/>
+        <text x="300" y="225" text-anchor="middle"
+              class="svg-text" font-size="18">Наблюдение 3</text>
+    </svg>`;
+}
+
+function svgCandle() {
+    return `
+    <svg viewBox="0 0 600 240">
+        <rect width="600" height="240" fill="#fff7ed"/>
+        <rect x="270" y="100" width="60" height="100"
+              rx="8" fill="#fef3c7" stroke="#92400e" stroke-width="4"/>
+        <path d="M300 100
+                 C270 75 295 45 300 25
+                 C330 60 330 82 300 100Z"
+              fill="#fb923c" stroke="#ea580c" stroke-width="4"/>
+        <path d="M300 90
+                 C287 70 300 55 303 45
+                 C315 65 315 78 300 90Z"
+              fill="#fde047"/>
+        <text x="300" y="225" text-anchor="middle"
+              class="svg-text" font-size="18">Наблюдение 4</text>
+    </svg>`;
+}
+
+function svgLamp() {
+    return `
+    <svg viewBox="0 0 600 240">
+        <rect width="600" height="240" fill="#fefce8"/>
+        <path d="M245 60 L355 60 L385 120 L215 120Z"
+              fill="#fde68a" stroke="#92400e" stroke-width="5"/>
+        <circle cx="300" cy="95" r="30" fill="#fef08a"/>
+        <line x1="300" y1="120" x2="300" y2="180"
+              stroke="#111827" stroke-width="6"/>
+        <line x1="250" y1="180" x2="350" y2="180"
+              stroke="#111827" stroke-width="8"/>
+        <text x="300" y="220" text-anchor="middle"
+              class="svg-text" font-size="18">Наблюдение 5</text>
+    </svg>`;
+}
+
+function svgSound() {
+    return `
+    <svg viewBox="0 0 600 240">
+        <rect width="600" height="240" fill="#f5f3ff"/>
+        <rect x="245" y="75" width="110" height="90"
+              rx="15" fill="#c4b5fd" stroke="#5b21b6" stroke-width="5"/>
+        <circle cx="300" cy="120" r="30"
+                fill="#8b5cf6" stroke="#4c1d95" stroke-width="4"/>
+        <path d="M385 85 Q450 120 385 155"
+              fill="none" stroke="#7c3aed" stroke-width="7"/>
+        <path d="M420 60 Q520 120 420 180"
+              fill="none" stroke="#a78bfa" stroke-width="7"/>
+        <text x="300" y="215" text-anchor="middle"
+              class="svg-text" font-size="18">Наблюдение 6</text>
+    </svg>`;
+}
+
+
+/* =========================================================
+   SVG — ИНСТРУМЕНТЫ
+========================================================= */
+
+function svgRuler() {
+    let marks = "";
+
+    for (let i = 0; i <= 20; i++) {
+        const x = 70 + i * 22;
+        marks += `<line x1="${x}" y1="105"
+                        x2="${x}" y2="${i % 5 === 0 ? 135 : 122}"
+                        class="tick"/>`;
+
+        if (i % 5 === 0) {
+            marks += `<text x="${x}" y="155"
+                         text-anchor="middle"
+                         class="svg-text" font-size="15">${i}</text>`;
+        }
+    }
+
+    return `
+    <svg viewBox="0 0 600 190">
+        <rect x="55" y="90" width="460" height="50"
+              rx="5" fill="#fde68a" stroke="#92400e" stroke-width="4"/>
+        ${marks}
+    </svg>`;
+}
+
+function svgThermometer() {
+    let marks = "";
+
+    for (let i = 0; i <= 10; i++) {
+        const y = 170 - i * 13;
+        const value = i * 10;
+        marks += `
+            <line x1="275" y1="${y}" x2="315" y2="${y}"
+                  class="tick"/>
+            <text x="325" y="${y+5}"
+                  class="svg-text" font-size="14">${value}</text>`;
+    }
+
+    return `
+    <svg viewBox="0 0 600 210">
+        <rect x="255" y="20" width="38" height="155"
+              rx="19" fill="#e2e8f0"
+              stroke="#334155" stroke-width="4"/>
+        <circle cx="274" cy="178" r="27"
+                fill="#ef4444"/>
+        <rect x="265" y="65" width="18" height="113"
+              fill="#ef4444"/>
+        ${marks}
+    </svg>`;
+}
+
+function svgCylinder() {
+    let marks = "";
+
+    for (let i = 0; i <= 10; i++) {
+        const y = 185 - i * 14;
+        const value = i * 10;
+
+        marks += `
+            <line x1="330" y1="${y}" x2="365" y2="${y}"
+                  class="tick"/>
+            <text x="375" y="${y+5}"
+                  class="svg-text" font-size="13">${value}</text>`;
+    }
+
+    return `
+    <svg viewBox="0 0 600 220">
+        <path d="M250 20 L350 20 L350 190
+                 Q300 205 250 190Z"
+              fill="#e0f2fe"
+              stroke="#0369a1"
+              stroke-width="5"/>
+        <path d="M253 125 L347 125 L347 190
+                 Q300 202 253 190Z"
+              fill="#38bdf8"/>
+        ${marks}
+    </svg>`;
+}
+
+function svgBalance() {
+    return `
+    <svg viewBox="0 0 600 230">
+        <line x1="300" y1="55" x2="300" y2="170"
+              stroke="#111827" stroke-width="7"/>
+        <line x1="170" y1="100" x2="430" y2="100"
+              stroke="#111827" stroke-width="7"/>
+        <path d="M160 100 L105 170 L215 170Z"
+              fill="#bae6fd" stroke="#0369a1" stroke-width="4"/>
+        <path d="M440 100 L385 170 L495 170Z"
+              fill="#bae6fd" stroke="#0369a1" stroke-width="4"/>
+        <path d="M270 170 L300 195 L330 170"
+              fill="none" stroke="#111827" stroke-width="6"/>
+    </svg>`;
+}
+
+function svgStopwatch() {
+    return `
+    <svg viewBox="0 0 600 220">
+        <circle cx="300" cy="120" r="75"
+                fill="#e2e8f0" stroke="#334155" stroke-width="6"/>
+        <circle cx="300" cy="120" r="60"
+                fill="#fff"/>
+        <line x1="300" y1="120" x2="300" y2="75"
+              stroke="#dc2626" stroke-width="5"/>
+        <line x1="300" y1="120" x2="335" y2="135"
+              stroke="#2563eb" stroke-width="5"/>
+        <circle cx="300" cy="120" r="7" fill="#111827"/>
+        <rect x="285" y="25" width="30" height="20"
+              rx="5" fill="#475569"/>
+    </svg>`;
+}
+
+function svgTape() {
+    return `
+    <svg viewBox="0 0 600 220">
+        <circle cx="300" cy="110" r="75"
+                fill="#facc15" stroke="#854d0e" stroke-width="6"/>
+        <circle cx="300" cy="110" r="25"
+                fill="#fef9c3" stroke="#854d0e" stroke-width="4"/>
+        <path d="M375 110 L520 110"
+              stroke="#facc15" stroke-width="25"/>
+        <path d="M390 98 L390 122 M415 98 L415 122
+                 M440 98 L440 122 M465 98 L465 122
+                 M490 98 L490 122"
+              stroke="#854d0e" stroke-width="3"/>
+    </svg>`;
+}
+
+
+/* =========================================================
+   SVG — ШКАЛЫ
+========================================================= */
+
+function scaleSvg(min, max, divisions, pointerIndex, unit) {
+
+    const width = 560;
+    const start = 60;
+    const end = 500;
+    const step = (end - start) / divisions;
+
+    let html = `
+    <svg viewBox="0 0 600 220">
+        <line x1="${start}" y1="130"
+               x2="${end}" y2="130"
+               class="axis"/>
+    `;
+
+    for (let i = 0; i <= divisions; i++) {
+
+        const x = start + i * step;
+
+        const major = i % Math.max(1, Math.floor(divisions / 5)) === 0
+            || i === divisions;
+
+        const tickHeight = major ? 45 : 25;
+
+        html += `
+            <line x1="${x}" y1="130"
+                  x2="${x}" y2="${130-tickHeight}"
+                  class="tick"/>`;
+
+        if (major) {
+
+            const value = min + (max-min) * (i/divisions);
+
+            html += `
+                <text x="${x}" y="170"
+                      text-anchor="middle"
+                      class="svg-text"
+                      font-size="15">
+                    ${Number.isInteger(value) ? value : value.toFixed(1)}
+                </text>`;
+        }
+    }
+
+    const pointerX = start + pointerIndex * step;
+
+    html += `
+        <line x1="${pointerX}" y1="65"
+              x2="${pointerX}" y2="122"
+              class="pointer"/>
+
+        <polygon points="
+            ${pointerX-10},65
+            ${pointerX+10},65
+            ${pointerX},45"
+            fill="#dc2626"/>
+
+        <text x="300" y="205"
+              text-anchor="middle"
+              class="svg-text"
+              font-size="17">
+            ${unit}
+        </text>
+    </svg>`;
+
+    return html;
+}
+
+
+/* =========================================================
+   ВОПРОСЫ
+========================================================= */
+
+const questions = [
+
+/* ---------- 1. ФИЗИЧЕСКИЕ ЯВЛЕНИЯ ---------- */
+
+{
+    stage: "Мир физических явлений",
+    stageNumber: "УРОВЕНЬ 1 • ИССЛЕДОВАТЕЛЬ",
+    difficulty: "easy",
+    type: "single",
+    visual: svgIce(),
+    text: "Какой вид физического явления наблюдается при постепенном изменении состояния данного тела под действием окружающей среды?",
+    options: [
+        "Механическое",
+        "Тепловое",
+        "Световое",
+        "Звуковое"
+    ],
+    answer: "Тепловое",
+    explanation: "Изменение агрегатного состояния вещества связано с тепловыми процессами."
+},
+
+{
+    stage: "Мир физических явлений",
+    stageNumber: "УРОВЕНЬ 1 • ИССЛЕДОВАТЕЛЬ",
+    difficulty: "easy",
+    visual: svgBoiling(),
+    type: "single",
+    text: "В сосуде наблюдается процесс, сопровождающийся образованием пузырьков и переходом вещества в газообразное состояние. К какой группе относится явление?",
+    options: [
+        "Тепловые явления",
+        "Механические явления",
+        "Световые явления",
+        "Магнитные явления"
+    ],
+    answer: "Тепловые явления",
+    explanation: "Переход вещества из жидкого состояния в газообразное при нагревании относится к тепловым явлениям."
+},
+
+{
+    stage: "Мир физических явлений",
+    stageNumber: "УРОВЕНЬ 1 • ИССЛЕДОВАТЕЛЬ",
+    difficulty: "medium",
+    visual: svgBall(),
+    type: "single",
+    text: "Тело изменяет своё положение относительно выбранной системы отсчёта. Какой процесс описывает наблюдатель?",
+    options: [
+        "Механическое движение",
+        "Теплопередачу",
+        "Изменение агрегатного состояния",
+        "Распространение звука"
+    ],
+    answer: "Механическое движение",
+    explanation: "Изменение положения тела относительно других тел является механическим движением."
+},
+
+{
+    stage: "Мир физических явлений",
+    stageNumber: "УРОВЕНЬ 1 • ИССЛЕДОВАТЕЛЬ",
+    difficulty: "medium",
+    visual: svgCandle(),
+    type: "single",
+    text: "Какой процесс можно непосредственно связать с изменением температуры вещества и выделением энергии?",
+    options: [
+        "Тепловой",
+        "Механический",
+        "Звуковой",
+        "Магнитный"
+    ],
+    answer: "Тепловой",
+    explanation: "Процессы, связанные с нагреванием, охлаждением и выделением или поглощением тепла, относятся к тепловым."
+},
+
+{
+    stage: "Мир физических явлений",
+    stageNumber: "УРОВЕНЬ 1 • ИССЛЕДОВАТЕЛЬ",
+    difficulty: "medium",
+    visual: svgLamp(),
+    type: "single",
+    text: "Какое явление позволяет человеку видеть предметы, когда они освещены источником?",
+    options: [
+        "Световое",
+        "Механическое",
+        "Тепловое",
+        "Звуковое"
+    ],
+    answer: "Световое",
+    explanation: "Видимость предметов связана с распространением и взаимодействием света с веществом."
+},
+
+{
+    stage: "Мир физических явлений",
+    stageNumber: "УРОВЕНЬ 1 • ИССЛЕДОВАТЕЛЬ",
+    difficulty: "medium",
+    visual: svgSound(),
+    type: "single",
+    text: "Колебания источника передаются окружающей среде и воспринимаются органом слуха. К какому явлению относится наблюдение?",
+    options: [
+        "Звуковому",
+        "Световому",
+        "Тепловому",
+        "Механическому"
+    ],
+    answer: "Звуковому",
+    explanation: "Звук связан с механическими колебаниями и их распространением в упругой среде."
+},
+
+/* ---------- 2. ИЗМЕРЕНИЯ ---------- */
+
+{
+    stage: "Лаборатория измерений",
+    stageNumber: "УРОВЕНЬ 2 • ЛАБОРАТОРИЯ",
+    difficulty: "easy",
+    visual: svgRuler(),
+    type: "single",
+    text: "Какую физическую величину можно определить данным прибором?",
+    options: [
+        "Длину",
+        "Массу",
+        "Температуру",
+        "Время"
+    ],
+    answer: "Длину",
+    explanation: "Шкала такого прибора используется для определения длины."
+},
+
+{
+    stage: "Лаборатория измерений",
+    stageNumber: "УРОВЕНЬ 2 • ЛАБОРАТОРИЯ",
+    difficulty: "easy",
+    visual: svgThermometer(),
+    type: "single",
+    text: "Какую физическую величину измеряют данным прибором?",
+    options: [
+        "Температуру",
+        "Длину",
+        "Массу",
+        "Объём"
+    ],
+    answer: "Температуру",
+    explanation: "Температуру измеряют термометром."
+},
+
+{
+    stage: "Лаборатория измерений",
+    stageNumber: "УРОВЕНЬ 2 • ЛАБОРАТОРИЯ",
+    difficulty: "easy",
+    visual: svgStopwatch(),
+    type: "single",
+    text: "Какая физическая величина определяется при использовании этого прибора?",
+    options: [
+        "Время",
+        "Скорость",
+        "Масса",
+        "Длина"
+    ],
+    answer: "Время",
+    explanation: "Секундомер используется для измерения промежутков времени."
+},
+
+{
+    stage: "Лаборатория измерений",
+    stageNumber: "УРОВЕНЬ 2 • ЛАБОРАТОРИЯ",
+    difficulty: "medium",
+    visual: svgBalance(),
+    type: "single",
+    text: "Какую величину определяют с помощью равноплечих весов?",
+    options: [
+        "Массу",
+        "Силу",
+        "Объём",
+        "Температуру"
+    ],
+    answer: "Массу",
+    explanation: "Весы позволяют определить массу тела путём сравнения."
+},
+
+{
+    stage: "Лаборатория измерений",
+    stageNumber: "УРОВЕНЬ 2 • ЛАБОРАТОРИЯ",
+    difficulty: "medium",
+    visual: svgCylinder(),
+    type: "single",
+    text: "Какую физическую величину можно определить по данной шкале?",
+    options: [
+        "Объём жидкости",
+        "Массу жидкости",
+        "Температуру",
+        "Время"
+    ],
+    answer: "Объём жидкости",
+    explanation: "Мерный цилиндр используют для определения объёма жидкости."
+},
+
+{
+    stage: "Лаборатория измерений",
+    stageNumber: "УРОВЕНЬ 2 • ЛАБОРАТОРИЯ",
+    difficulty: "medium",
+    visual: svgTape(),
+    type: "single",
+    text: "Какую величину целесообразно измерять таким инструментом при работе на школьном стадионе?",
+    options: [
+        "Длину",
+        "Температуру",
+        "Время",
+        "Массу"
+    ],
+    answer: "Длину",
+    explanation: "Измерительная лента позволяет измерять большие расстояния и длины."
+},
+
+/* ---------- 3. ЦЕНА ДЕЛЕНИЯ ---------- */
+
+{
+    stage: "Секрет цены деления",
+    stageNumber: "УРОВЕНЬ 3 • ЦЕНА ДЕЛЕНИЯ",
+    difficulty: "medium",
+    type: "number",
+    visual: scaleSvg(10,20,10,6,"см"),
+    text: "Определи цену одного деления шкалы.",
+    answer: 1,
+    unit: "см",
+    explanation: "Разность показаний: 20 − 10 = 10 см. Между ними 10 промежутков. 10 : 10 = 1 см."
+},
+
+{
+    stage: "Секрет цены деления",
+    stageNumber: "УРОВЕНЬ 3 • ЦЕНА ДЕЛЕНИЯ",
+    difficulty: "medium",
+    type: "number",
+    visual: scaleSvg(20,30,10,7,"°C"),
+    text: "Определи цену одного малого деления шкалы.",
+    answer: 1,
+    unit: "°C",
+    explanation: "30 − 20 = 10 °C. 10 промежутков. 10 : 10 = 1 °C."
+},
+
+{
+    stage: "Секрет цены деления",
+    stageNumber: "УРОВЕНЬ 3 • ЦЕНА ДЕЛЕНИЯ",
+    difficulty: "medium",
+    type: "number",
+    visual: scaleSvg(100,200,10,6,"мл"),
+    text: "Какова цена одного деления шкалы?",
+    answer: 10,
+    unit: "мл",
+    explanation: "200 − 100 = 100 мл. 100 : 10 = 10 мл."
+},
+
+{
+    stage: "Секрет цены деления",
+    stageNumber: "УРОВЕНЬ 3 • ЦЕНА ДЕЛЕНИЯ",
+    difficulty: "hard",
+    type: "number",
+    visual: scaleSvg(0,5,10,7,"с"),
+    text: "Найди цену одного деления шкалы.",
+    answer: 0.5,
+    unit: "с",
+    explanation: "5 − 0 = 5 с. Между крайними отметками 10 промежутков. 5 : 10 = 0,5 с."
+},
+
+{
+    stage: "Секрет цены деления",
+    stageNumber: "УРОВЕНЬ 3 • ЦЕНА ДЕЛЕНИЯ",
+    difficulty: "hard",
+    type: "number",
+    visual: scaleSvg(40,80,8,5,"°C"),
+    text: "Между 40 и 80 расположено 8 равных промежутков. Определи цену одного деления.",
+    answer: 5,
+    unit: "°C",
+    explanation: "80 − 40 = 40 °C. 40 : 8 = 5 °C."
+},
+
+{
+    stage: "Секрет цены деления",
+    stageNumber: "УРОВЕНЬ 3 • ЦЕНА ДЕЛЕНИЯ",
+    difficulty: "hard",
+    type: "number",
+    visual: scaleSvg(200,500,15,9,"мл"),
+    text: "Между двумя подписанными отметками 15 равных промежутков. Определи цену одного деления.",
+    answer: 20,
+    unit: "мл",
+    explanation: "500 − 200 = 300 мл. 300 : 15 = 20 мл."
+},
+
+/* ---------- 4. СЧИТЫВАНИЕ ---------- */
+
+{
+    stage: "Считываем показания прибора",
+    stageNumber: "УРОВЕНЬ 4 • СЧИТЫВАНИЕ",
+    difficulty: "medium",
+    type: "single",
+    visual: scaleSvg(0,100,10,6,"°C"),
+    text: "Какое значение показывает указатель?",
+    options: [
+        "40 °C",
+        "50 °C",
+        "60 °C",
+        "70 °C"
+    ],
+    answer: "60 °C",
+    explanation: "Указатель расположен на шестом промежутке от нулевой отметки."
+},
+
+{
+    stage: "Считываем показания прибора",
+    stageNumber: "УРОВЕНЬ 4 • СЧИТЫВАНИЕ",
+    difficulty: "medium",
+    type: "single",
+    visual: scaleSvg(0,50,10,7,"см"),
+    text: "Каково показание шкалы?",
+    options: [
+        "30 см",
+        "35 см",
+        "40 см",
+        "45 см"
+    ],
+    answer: "35 см",
+    explanation: "Цена деления равна 5 см. Указатель находится на седьмом делении: 7 × 5 = 35 см."
+},
+
+{
+    stage: "Считываем показания прибора",
+    stageNumber: "УРОВЕНЬ 4 • СЧИТЫВАНИЕ",
+    difficulty: "hard",
+    type: "single",
+    visual: scaleSvg(100,200,10,4,"мл"),
+    text: "Определи объём по показанию шкалы.",
+    options: [
+        "120 мл",
+        "130 мл",
+        "140 мл",
+        "150 мл"
+    ],
+    answer: "140 мл",
+    explanation: "Цена деления: (200−100):10 = 10 мл. Четвёртое деление после 100 мл даёт 140 мл."
+},
+
+{
+    stage: "Считываем показания прибора",
+    stageNumber: "УРОВЕНЬ 4 • СЧИТЫВАНИЕ",
+    difficulty: "hard",
+    type: "single",
+    visual: scaleSvg(20,40,10,8,"°C"),
+    text: "Определи показание шкалы.",
+    options: [
+        "34 °C",
+        "36 °C",
+        "38 °C",
+        "40 °C"
+    ],
+    answer: "36 °C",
+    explanation: "Цена деления равна 2 °C. Восемь делений после 20 °C: 20 + 8×2 = 36 °C."
+},
+
+{
+    stage: "Считываем показания прибора",
+    stageNumber: "УРОВЕНЬ 4 • СЧИТЫВАНИЕ",
+    difficulty: "hard",
+    type: "single",
+    visual: scaleSvg(0,10,20,13,"с"),
+    text: "Определи показание прибора.",
+    options: [
+        "5,5 с",
+        "6 с",
+        "6,5 с",
+        "7 с"
+    ],
+    answer: "6,5 с",
+    explanation: "Цена деления: 10 : 20 = 0,5 с. 13 делений дают 13×0,5 = 6,5 с."
+},
+
+/* ---------- 5. ФИНАЛЬНЫЙ БОСС ---------- */
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "Ученик измерил длину спортивной площадки рулеткой. Какую физическую величину он определял непосредственно?",
+    options: [
+        "Длину",
+        "Площадь",
+        "Скорость",
+        "Время"
+    ],
+    answer: "Длину",
+    explanation: "Непосредственно рулеткой измеряется длина."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "Цена деления шкалы равна 2 °C. Нижняя подписанная отметка равна 10 °C. Указатель находится на шестом делении после неё. Каково показание?",
+    options: [
+        "20 °C",
+        "22 °C",
+        "24 °C",
+        "26 °C"
+    ],
+    answer: "22 °C",
+    explanation: "6 × 2 = 12 °C. 10 + 12 = 22 °C."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "Между отметками 50 и 100 мл расположено 10 промежутков. Указатель находится на восьмом промежутке после 50 мл. Каково показание?",
+    options: [
+        "80 мл",
+        "85 мл",
+        "90 мл",
+        "95 мл"
+    ],
+    answer: "90 мл",
+    explanation: "Цена деления: (100−50):10 = 5 мл. 50 + 8×5 = 90 мл."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "multi",
+    text: "Выбери все физические величины, которые можно измерить непосредственно соответствующими измерительными приборами.",
+    options: [
+        "Длину",
+        "Массу",
+        "Температуру",
+        "Время",
+        "Красоту предмета"
+    ],
+    answer: [
+        "Длину",
+        "Массу",
+        "Температуру",
+        "Время"
+    ],
+    explanation: "Длина, масса, температура и время являются физическими величинами, которые можно измерять приборами."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    visual: scaleSvg(0,40,8,5,"см"),
+    text: "Между 0 и 40 см восемь промежутков. Указатель находится на пятом делении. Какое значение он показывает?",
+    options: [
+        "20 см",
+        "25 см",
+        "30 см",
+        "35 см"
+    ],
+    answer: "25 см",
+    explanation: "Цена деления: 40 : 8 = 5 см. Пятое деление: 5×5 = 25 см."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "Автомобиль прошёл 2 км до одного пункта и ещё 14 км до следующего. Какой путь он прошёл всего?",
+    options: [
+        "12 км",
+        "14 км",
+        "16 км",
+        "28 км"
+    ],
+    answer: "16 км",
+    explanation: "Полный путь равен сумме участков: 2 + 14 = 16 км."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "У прибора верхняя отметка 80 единиц, нижняя 20 единиц. Между ними 12 промежутков. Какова цена деления?",
+    options: [
+        "4",
+        "5",
+        "6",
+        "8"
+    ],
+    answer: "5",
+    explanation: "(80−20):12 = 60:12 = 5 единиц."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "Что необходимо определить первым действием при расчёте цены деления между двумя подписанными отметками?",
+    options: [
+        "Разность значений этих отметок",
+        "Количество учеников",
+        "Среднюю скорость",
+        "Массу прибора"
+    ],
+    answer: "Разность значений этих отметок",
+    explanation: "Сначала находят разность между верхним и нижним значениями, затем делят её на число промежутков."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "Почему при вычислении цены деления нужно считать именно промежутки между штрихами, а не сами штрихи?",
+    options: [
+        "Потому что каждый промежуток соответствует одному шагу изменения показания",
+        "Потому что штрихи не имеют значения",
+        "Потому что шкала всегда содержит 10 штрихов",
+        "Потому что прибор не имеет шкалы"
+    ],
+    answer: "Потому что каждый промежуток соответствует одному шагу изменения показания",
+    explanation: "Цена деления показывает изменение величины при переходе от одного штриха к следующему, поэтому считают интервалы."
+},
+
+{
+    stage: "Финальный босс",
+    stageNumber: "ФИНАЛ • СЛОЖНЫЕ ЗАДАНИЯ",
+    difficulty: "hard",
+    type: "single",
+    text: "Температура воздуха утром была 8 °C, а днём стала 18 °C. На сколько градусов изменилась температура?",
+    options: [
+        "8 °C",
+        "10 °C",
+        "18 °C",
+        "26 °C"
+    ],
+    answer: "10 °C",
+    explanation: "18 − 8 = 10 °C."
+}
+
+];
+
+
+/* =========================================================
+   СОСТОЯНИЕ ИГРЫ
+========================================================= */
+
+function updateStats() {
+
+    $("scoreValue").textContent = score;
+
+    $("livesValue").textContent =
+        "❤️".repeat(lives) +
+        "🖤".repeat(3 - lives);
+
+    const maxPoints = questions.length * 10;
+
+    const currentPercent = Math.round(
+        (score / maxPoints) * 100
+    );
+
+    $("progressValue").textContent =
+        Math.min(100, Math.round(
+            ((currentQuestion) / questions.length) * 100
+        )) + "%";
+
+    $("progressFill").style.width =
+        Math.min(100,
+            Math.round(
+                (currentQuestion / questions.length) * 100
+            )
+        ) + "%";
+
+    $("levelValue").textContent =
+        getLevel(currentPercent);
+}
+
+
+/* =========================================================
+   ЗАПУСК
+========================================================= */
+
+studentNameInput.addEventListener("input", function() {
+    startBtn.disabled =
+        studentNameInput.value.trim().length < 3;
+});
+
+startBtn.addEventListener("click", function() {
+
+    const name = studentNameInput.value.trim();
+
+    if (name.length < 3) {
+        alert("Введите фамилию и имя.");
+        studentNameInput.focus();
+        return;
+    }
+
+    studentName = name;
+
+    startScreen.classList.add("hidden");
+    gameScreen.classList.remove("hidden");
+    finalScreen.classList.add("hidden");
+
+    currentQuestion = 0;
+    score = 0;
+    correctCount = 0;
+    errorCount = 0;
+    lives = 3;
+    answered = false;
+    selectedAnswers = [];
+
+    updateStats();
+    showQuestion();
+});
+
+
+/* =========================================================
+   ПОКАЗ ВОПРОСА
+========================================================= */
+
+function showQuestion() {
+
+    if (currentQuestion >= questions.length) {
+        finishGame();
+        return;
+    }
+
+    answered = false;
+    selectedAnswers = [];
+
+    const q = questions[currentQuestion];
+
+    $("stageNumber").textContent = q.stageNumber;
+    $("stageTitle").textContent = q.stage;
+
+    $("difficulty").textContent =
+        getDifficultyText(q.difficulty);
+
+    $("questionNumber").textContent =
+        `Задание ${currentQuestion + 1} из ${questions.length}`;
+
+    $("questionText").innerHTML =
+        escapeHtml(q.text);
+
+    $("visual").innerHTML =
+        q.visual || "";
+
+    $("feedback").className = "feedback";
+    $("feedback").innerHTML = "";
+
+    submitBtn.style.display = "inline-block";
+    submitBtn.disabled = true;
+
+    renderAnswers(q);
+
+    updateStats();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================================================
+   ОТРИСОВКА ОТВЕТОВ
+========================================================= */
+
+function renderAnswers(q) {
+
+    const area = $("answerArea");
+
+    area.innerHTML = "";
+
+    if (q.type === "number") {
+
+        area.innerHTML = `
+            <div class="numeric-box">
+                <input
+                    id="numericAnswer"
+                    type="number"
+                    step="any"
+                    placeholder="Введите число"
+                    autocomplete="off"
+                >
+                <span class="unit">${escapeHtml(q.unit || "")}</span>
+            </div>
+        `;
+
+        const input = $("numericAnswer");
+
+        input.addEventListener("input", function() {
+            submitBtn.disabled =
+                input.value.trim() === "";
+        });
+
+        input.addEventListener("keydown", function(e) {
+            if (e.key === "Enter" &&
+                input.value.trim() !== "") {
+                submitAnswer();
+            }
+        });
+
+        return;
+    }
+
+    const options = shuffle(q.options);
+
+    if (q.type === "multi") {
+
+        const note = document.createElement("div");
+        note.className = "multi-note";
+        note.textContent =
+            "Выберите все подходящие варианты.";
+        area.appendChild(note);
+    }
+
+    const optionsBox = document.createElement("div");
+    optionsBox.className = "options";
+
+    options.forEach(option => {
+
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.className = "option";
+        button.textContent = option;
+
+        button.addEventListener("click", function() {
+
+            if (answered) return;
+
+            if (q.type === "multi") {
+
+                if (selectedAnswers.includes(option)) {
+
+                    selectedAnswers =
+                        selectedAnswers.filter(
+                            item => item !== option
+                        );
+
+                    button.classList.remove("selected");
+
+                } else {
+
+                    selectedAnswers.push(option);
+                    button.classList.add("selected");
+                }
+
+                submitBtn.disabled =
+                    selectedAnswers.length === 0;
+
+            } else {
+
+                selectedAnswers = [option];
+
+                document
+                    .querySelectorAll(".option")
+                    .forEach(btn =>
+                        btn.classList.remove("selected")
+                    );
+
+                button.classList.add("selected");
+
+                submitBtn.disabled = false;
+            }
+        });
+
+        optionsBox.appendChild(button);
+    });
+
+    area.appendChild(optionsBox);
+}
+
+
+/* =========================================================
+   ПРОВЕРКА
+========================================================= */
+
+submitBtn.addEventListener("click", submitAnswer);
+
+function submitAnswer() {
+
+    if (answered) return;
+
+    const q = questions[currentQuestion];
+
+    let userAnswer;
+    let isCorrect = false;
+
+    if (q.type === "number") {
+
+        const input = $("numericAnswer");
+
+        if (!input ||
+            input.value.trim() === "") {
+            return;
+        }
+
+        userAnswer = Number(input.value);
+
+        isCorrect =
+            Number.isFinite(userAnswer) &&
+            Math.abs(userAnswer - q.answer) < 0.000001;
+
+    } else if (q.type === "multi") {
+
+        userAnswer = [...selectedAnswers];
+
+        const correct =
+            [...q.answer].sort();
+
+        const selected =
+            [...userAnswer].sort();
+
+        isCorrect =
+            correct.length === selected.length &&
+            correct.every(
+                (value, index) =>
+                    value === selected[index]
+            );
+
+    } else {
+
+        userAnswer =
+            selectedAnswers[0];
+
+        if (!userAnswer) return;
+
+        isCorrect =
+            userAnswer === q.answer;
+    }
+
+    answered = true;
+
+    if (isCorrect) {
+
+        score += 10;
+        correctCount++;
+
+    } else {
+
+        errorCount++;
+        lives--;
+
+    }
+
+    updateStats();
+
+    showFeedback(q, isCorrect, userAnswer);
+
+    if (lives <= 0) {
+
+        submitBtn.style.display = "none";
+
+        const button =
+            document.createElement("button");
+
+        button.className = "next-btn";
+        button.textContent =
+            "🔄 НАЧАТЬ ЗАНОВО";
+
+        button.addEventListener("click", restartGame);
+
+        $("feedback").appendChild(
+            document.createElement("br")
+        );
+
+        $("feedback").appendChild(button);
+
+        return;
+    }
+
+    submitBtn.style.display = "none";
+
+    const nextButton =
+        document.createElement("button");
+
+    nextButton.className = "next-btn";
+
+    nextButton.textContent =
+        currentQuestion === questions.length - 1
+            ? "🏆 ЗАВЕРШИТЬ КВЕСТ"
+            : "➡️ СЛЕДУЮЩЕЕ ЗАДАНИЕ";
+
+    nextButton.addEventListener("click", function() {
+
+        currentQuestion++;
+
+        showQuestion();
+    });
+
+    $("feedback").appendChild(nextButton);
+}
+
+
+/* =========================================================
+   FEEDBACK
+========================================================= */
+
+function showFeedback(q, isCorrect, userAnswer) {
+
+    const feedback = $("feedback");
+
+    feedback.className =
+        "feedback show " +
+        (isCorrect ? "good" : "bad");
+
+    if (isCorrect) {
+
+        feedback.innerHTML = `
+            <b>✅ Верно!</b><br>
+            Ты правильно выполнил задание.<br>
+            <b>+10 баллов</b>
+        `;
+
+    } else {
+
+        let entered = "";
+
+        if (q.type === "number") {
+            entered =
+                Number.isFinite(userAnswer)
+                    ? `Твой результат: <b>${userAnswer} ${escapeHtml(q.unit || "")}</b><br>`
+                    : "";
+        }
+
+        feedback.innerHTML = `
+            <b>❌ Есть ошибка.</b><br>
+            ${entered}
+            <br>
+            <b>Разбор:</b> ${escapeHtml(q.explanation)}
+        `;
+    }
+}
+
+
+/* =========================================================
+   ЗАВЕРШЕНИЕ
+========================================================= */
+
+function finishGame() {
+
+    gameScreen.classList.add("hidden");
+    finalScreen.classList.remove("hidden");
+
+    const percent = Math.round(
+        (score / (questions.length * 10)) * 100
+    );
+
+    const gradeData = getGrade(percent);
+    const level = getLevel(percent);
+
+    $("finalName").textContent =
+        studentName;
+
+    $("finalScore").textContent =
+        score;
+
+    $("finalCorrect").textContent =
+        correctCount;
+
+    $("finalErrors").textContent =
+        errorCount;
+
+    $("finalPercent").textContent =
+        percent + "%";
+
+    $("finalGrade").textContent =
+        gradeData.grade;
+
+    $("finalGradeText").textContent =
+        gradeData.text;
+
+    $("certName").textContent =
+        studentName;
+
+    $("certGrade").textContent =
+        `Оценка: ${gradeData.grade} — ${gradeData.text}`;
+
+    $("certPercent").textContent =
+        percent + "%";
+
+    $("certPoints").textContent =
+        score;
+
+    $("certLevel").textContent =
+        level;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================================================
+   RESTART
+========================================================= */
+
+restartBtn.addEventListener("click", restartGame);
+
+function restartGame() {
+
+    currentQuestion = 0;
+    score = 0;
+    correctCount = 0;
+    errorCount = 0;
+    lives = 3;
+    answered = false;
+    selectedAnswers = [];
+
+    finalScreen.classList.add("hidden");
+    startScreen.classList.remove("hidden");
+
+    studentNameInput.value = studentName;
+
+    startBtn.disabled =
+        studentName.trim().length < 3;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================================================
+   ЗАЩИТА ОТ СЛУЧАЙНОГО SUBMIT
+========================================================= */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter" &&
+        document.activeElement === studentNameInput &&
+        !startBtn.disabled) {
+
+        startBtn.click();
+    }
+});
+
+</script>
+
+</body>
+</html>
